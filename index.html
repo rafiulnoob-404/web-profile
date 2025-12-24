@@ -1,0 +1,97 @@
+<!-- index.html -->
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Logo zoom-&-pin Demo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- spacer to avoid layout shift when header becomes fixed -->
+  <div id="header-spacer"></div>
+
+  <header id="siteHeader" class="large">
+    <div class="logo-wrap">
+      <!-- Inline SVG logo so no external asset is required. Replace with your SVG if needed. -->
+      <svg id="siteLogo" class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" aria-label="Logo">
+        <defs>
+          <linearGradient id="g" x1="0" x2="1">
+            <stop offset="0" stop-color="#4f46e5"/>
+            <stop offset="1" stop-color="#06b6d4"/>
+          </linearGradient>
+        </defs>
+        <circle cx="50" cy="40" r="28" fill="url(#g)" />
+        <text x="50" y="55" font-family="Inter, system-ui, Arial" font-size="20" fill="#fff" text-anchor="middle">LOGO</text>
+      </svg>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>উদাহরণ পেজ</h1>
+      <p>পেজে স্ক্রল করলে লোগোটি ধীরে ধীরে ছোট হয়ে উপরের মাঝে পিন হয়ে যাবে। নিচে স্ক্রল করলে আবার বড় হয়ে মাঝেই থাকবে।</p>
+    </section>
+
+    <section class="content">
+      <p>এর নিচে অনেক কন্টেন্ট যোগ করা হয়েছে যাতে স্ক্রল দেখা যায়।</p>
+      <div class="filler">
+        <!-- repeated paragraphs to make long page -->
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi, voluptate.</p>
+        <p>Aliquid, incidunt. Lorem ipsum dolor sit amet, consectetur.</p>
+        <p>Repeat...</p>
+        <p style="margin-top:1200px">শেষে পৌঁছালেন — এবার উপরে স্ক্রল করে পরীক্ষা করুন।</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const header = document.getElementById('siteHeader');
+      const spacer = document.getElementById('header-spacer');
+      const logo = document.getElementById('siteLogo');
+
+      // initial spacer height equals header height when page loads
+      function setSpacerHeight(h) {
+        spacer.style.height = h + 'px';
+      }
+
+      // compute large header height (initial) to reserve space when fixed
+      function refreshSpacer() {
+        const h = header.getBoundingClientRect().height;
+        if (document.body.classList.contains('logo-pinned')) {
+          // when pinned we want spacer to keep the original flow height
+          setSpacerHeight(h);
+        } else {
+          setSpacerHeight(0);
+        }
+      }
+
+      // on scroll: add or remove pinned state based on scrollY
+      let lastScrollY = window.scrollY;
+      window.addEventListener('scroll', () => {
+        const y = window.scrollY;
+        // threshold can be changed (currently 40px)
+        if (y > 40) {
+          document.body.classList.add('logo-pinned');
+        } else {
+          document.body.classList.remove('logo-pinned');
+        }
+        lastScrollY = y;
+      }, {passive:true});
+
+      // on resize recompute spacer
+      window.addEventListener('resize', refreshSpacer);
+
+      // when class changes, update spacer - use MutationObserver to catch class changes on body
+      const mo = new MutationObserver(() => refreshSpacer());
+      mo.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+      // initial call
+      refreshSpacer();
+    })();
+  </script>
+
+</body>
+</html>
