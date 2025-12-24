@@ -1,0 +1,75 @@
+/* style.css */
+/* Place this in a separate file named `style.css` next to index.html */
+:root{
+  --header-large: 260px;   /* বড় অবস্থায় header উচ্চতা */
+  --logo-large: 220px;     /* বড় অবস্থায় logo এর প্রস্থ */
+  --header-small: 64px;    /* পিন হয়ে গেলে header উচ্চতা */
+  --logo-small: 48px;      /* পিন হয়ে গেলে logo প্রস্থ */
+  --transition: 300ms cubic-bezier(.2,.9,.2,1);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;}
+
+/* Header - centered large area */
+#siteHeader{
+  height:var(--header-large);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  background:linear-gradient(180deg, #ffffff 0%, #fbfbff 100%);
+  transition:height var(--transition), background var(--transition);
+  overflow:visible;
+}
+
+.logo-wrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.logo{
+  width:var(--logo-large);
+  height:auto;
+  display:block;
+  transition:transform var(--transition), width var(--transition), top var(--transition), left var(--transition);
+  will-change:transform;
+}
+
+/* The pinned state - smaller logo and fixed to top center */
+body.logo-pinned #siteHeader{
+  height:var(--header-small);
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:9999;
+  background:rgba(255,255,255,0.98);
+  box-shadow:0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* scale and move the inline SVG visually to top center */
+body.logo-pinned .logo{
+  width:var(--logo-small);
+  transform:translateY(-8px);
+}
+
+/* spacer keeps layout from jumping when header becomes fixed */
+#header-spacer{height:0;transition:height var(--transition)}
+
+main{padding:24px}
+.hero{padding:36px 0}
+.hero h1{margin:0 0 8px 0}
+.content{margin-top:16px}
+.filler p{line-height:1.6}
+
+/* responsive tweaks */
+@media (max-width:700px){
+  :root{ --header-large:180px; --logo-large:140px; --header-small:56px; --logo-small:40px }
+}
+
+/* Optional: smoother scaling while scrolling (progress-based) */
+/* This uses position:sticky alternative and CSS variables if you want to get fancy. */
+
+/* End of style.css */
